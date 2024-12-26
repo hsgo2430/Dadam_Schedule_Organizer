@@ -1,6 +1,8 @@
 import pdfplumber
 
-from Model.Student import Student
+from Model.Student import Student, Worker
+
+
 def createStudent(studentInfo):
     studentName = studentInfo[0][1]
     studentId = studentInfo[1][1]
@@ -21,24 +23,31 @@ def arrangeStudentTimeTable(studentTimeTable):
 
     return studentWeekTimeTable
 
-def getStudentDataFromPDF(filePath):
+def getNewStudentDataFromPDF(filePath):
     # PDF 열기
     with pdfplumber.open(filePath) as pdf:
         for page in pdf.pages:
-            # 페이지에서 표 추출
             tables = page.extract_tables()  # 테이블만 출력
             studentInfo = tables[0]
             studentTimeTable = tables[1]
 
             student = createStudent(studentInfo)
             student.setTimetable(arrangeStudentTimeTable(studentTimeTable))
+            student.setWorker(Worker.NEW)
 
-    print(student.name)
-    print(student.studentId)
-    print(student.major)
-    # 결과 출력
-    for idx, row in enumerate(student.timeTable):
-        print(f"Row {idx}: {row}")
+    return student
 
 
-getStudentDataFromPDF("C:/Users/hsgo2/Dadam/DadamTimeTable/(박수진)[전공교육지원센터] 2024학년도 2학기 근로멘토장학생 신청서.pdf")
+def getExistStudentDataFromPDF(filePath):
+    # PDF 열기
+    with pdfplumber.open(filePath) as pdf:
+        for page in pdf.pages:
+            tables = page.extract_tables()  # 테이블만 출력
+            studentInfo = tables[0]
+            studentTimeTable = tables[1]
+
+            student = createStudent(studentInfo)
+            student.setTimetable(arrangeStudentTimeTable(studentTimeTable))
+            student.setWorker(Worker.EXISTING)
+
+    return student
