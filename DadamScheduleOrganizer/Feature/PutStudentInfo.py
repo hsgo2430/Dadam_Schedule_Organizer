@@ -1,14 +1,12 @@
 from openpyxl import load_workbook
 
 from Feature.ExcelUtil import findLastRowIndex, findLastColIndex
-from Feature.GetStudentInfo import getNewStudentDataFromPDF
 from Model.Student import Worker
 
-load_wb = load_workbook("test.xlsx", data_only=True)
-student = getNewStudentDataFromPDF("C:/Users/hsgo2/Dadam/DadamTimeTable/(고효석)[전공교육지원센터] 2024학년도 2학기 근로멘토장학생 신청서.pdf")
+def putStudentNameMajor(excel_file_path, student):
+    load_wb = load_workbook(excel_file_path, data_only=True)
+    work_space = load_wb.active
 
-def putStudentNameMajor(excel, student):
-    work_space = excel.active
     if student.worker == Worker.EXISTING:
         last_row = findLastRowIndex(work_space, 4, 67)
         work_space[f"{chr(last_row)}4"] = student.name
@@ -17,14 +15,22 @@ def putStudentNameMajor(excel, student):
         last_row = findLastRowIndex(work_space, 6, 67)
         work_space[f"{chr(last_row)}6"] = student.name
 
-    excel.save("test.xlsx")
+    load_wb.save(excel_file_path)
 
-def putStudnetTimeSchedule(excel, student):
-    work_space = excel.active
-    print(student.timeTable)
-    first_row = 66
-    second_row = 67
-    # 아스키 코드 B, C
+
+def putStudnetTimeSchedule(excel_file_path, student):
+    load_wb = load_workbook(excel_file_path, data_only=True)
+    work_space = load_wb.active
+
+    if student.worker == Worker.NEW:
+        first_row = 68
+        second_row = 69
+        # 아스키 코드 D, E
+
+    elif student.worker == Worker.EXISTING:
+        first_row = 66
+        second_row = 67
+        # 아스키 코드 B, C
 
     for week_time_table in student.timeTable:
         # 월 화 수 목 금
@@ -43,8 +49,5 @@ def putStudnetTimeSchedule(excel, student):
 
         first_row += 4
         second_row += 4
-    excel.save("test.xlsx")
+    load_wb.save(excel_file_path)
 
-
-putStudentNameMajor(load_wb, student)
-putStudnetTimeSchedule(load_wb, student)
