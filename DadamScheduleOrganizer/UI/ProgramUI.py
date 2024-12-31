@@ -36,6 +36,16 @@ class Ui_MainWindow(object):
         self.NewWorkerButton.setGeometry(QRect(150, 130, 291, 61))
 
         self.NewWorkerButton.clicked.connect(self.get_new_worker_pdf_file)
+        # 신규 근무자 pdf 가져오기
+
+        # --근무시간표 정렬-- 2024-12-31 추가(김주상)
+        self.SortButton = QPushButton(self.centralwidget)
+        self.SortButton.setObjectName(u"SortButton")
+        self.SortButton.setGeometry(QRect(150, 130, 291, 61))
+        self.SortButton.setText("데이터 정렬")
+
+        self.SortButton.clicked.connect(self.sort_worker_schecule)
+        # --근무시간표 정렬--
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -73,7 +83,7 @@ class Ui_MainWindow(object):
         try:
             file_path, _ = QFileDialog.getOpenFileName(None, '엑셀 파일 선택', '../data', 'Excel Files (*.xls *.xlsx *.xlsm *.csv)')
             self.excel_file_path = file_path
-            QMessageBox.information(None, '정보', f'엑셀 파일 설정이 완료되었습니다: \n{str(file_path)}')
+            print(f'file_path : {file_path}')
 
         except Exception as e:
             QMessageBox.critical(None, '오류', f'파일을 불러오는 중 오류가 발생했습니다: {str(e)}')
@@ -82,16 +92,12 @@ class Ui_MainWindow(object):
     def get_exist_worker_pdf_file(self):
         if self.excel_file_path is not None:
             try:
-                file_paths, _ = QFileDialog.getOpenFileNames(None, '기존 근무 학생 시간표 파일 선택', '../data', 'PDF Files (*.pdf)')
-
-                if not file_paths:
-                    QMessageBox.warning(None, '경고', '선택된 파일이 없습니다.')
-                    return
+                file_paths, _ = QFileDialog.getOpenFileNames(None, 'PDF 파일 선택', '../data', 'PDF Files (*.pdf)')
 
                 for student_file_path in file_paths:
                     make_time_table(self.excel_file_path, student_file_path, False)
 
-                QMessageBox.information(None, '정보', '엑셀에 데이터가 저장되었습니다.')
+                QMessageBox.critical(None, '종료', '엑셀에 데이터가 저장되었습니다.')
 
             except Exception as e:
                 QMessageBox.critical(None, '오류', f'파일을 불러오는 중 오류가 발생했습니다: {str(e)}')
@@ -102,19 +108,30 @@ class Ui_MainWindow(object):
     def get_new_worker_pdf_file(self):
         if self.excel_file_path is not None:
             try:
-                file_paths, _ = QFileDialog.getOpenFileNames(None, '신규 근무 학생 시간표 파일 선택', '../data', 'PDF Files (*.pdf)')
-
-                if not file_paths:
-                    QMessageBox.warning(None, '경고', '선택된 파일이 없습니다.')
-                    return
+                file_paths, _ = QFileDialog.getOpenFileNames(None, 'PDF 파일 선택', '../data', 'PDF Files (*.pdf)')
 
                 for student_file_path in file_paths:
                     make_time_table(self.excel_file_path, student_file_path, True)
 
-                QMessageBox.information(None, '정보', '엑셀에 데이터가 저장되었습니다.')
+                QMessageBox.critical(None, '종료', '엑셀에 데이터가 저장되었습니다.')
 
             except Exception as e:
                 QMessageBox.critical(None, '오류', f'파일을 불러오는 중 오류가 발생했습니다: {str(e)}')
         else:
             QMessageBox.critical(None, '오류', '엑셀 파일 경로부터 설정해주세요')
     # 신규 근무자의 시간표 파일 가져오기
+
+    def sort_worker_schecule(self):
+        if self.excel_file_path is not None:
+            try:
+                file_paths, _ = QFileDialog.getOpenFileNames(None, 'PDF 파일 선택', '../data', 'PDF Files (*.pdf)')
+
+                sortStudentTimeSchecule(self.excel_file_path)
+
+                QMessageBox.critical(None, '종료', '근무자 시간표가 정렬되었습니다.')
+
+            except Exception as e:
+                QMessageBox.critical(None, '오류', f'시간표 정렬 중 오류가 발생했습니다: {str(e)}')
+        else:
+            QMessageBox.critical(None, '오류', '엑셀 파일 경로부터 설정해주세요')
+    # --근무시간표 정렬-- 2024-12-31 추가(김주상)
