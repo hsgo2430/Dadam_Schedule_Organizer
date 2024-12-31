@@ -29,10 +29,12 @@ def getNewStudentDataFromPDF(filePath):
         for page in pdf.pages:
             tables = page.extract_tables()  # 테이블만 출력
             studentInfo = tables[0]
-            studentTimeTable = tables[1]
-
             student = createStudent(studentInfo)
-            student.setTimetable(arrangeStudentTimeTable(studentTimeTable))
+
+            for count in range(1, len(tables)):
+                studentTimeTable = tables[count]
+                student.setTimetable(arrangeStudentTimeTable(studentTimeTable))
+
             student.setWorker(Worker.NEW)
 
     return student
@@ -44,10 +46,12 @@ def getExistStudentDataFromPDF(filePath):
         for page in pdf.pages:
             tables = page.extract_tables()  # 테이블만 출력
             studentInfo = tables[0]
-            studentTimeTable = tables[1]
-
             student = createStudent(studentInfo)
-            student.setTimetable(arrangeStudentTimeTable(studentTimeTable))
+
+            for count in range(1, len(tables)):
+                studentTimeTable = tables[count]
+                student.setTimetable(arrangeStudentTimeTable(studentTimeTable))
+
             student.setWorker(Worker.EXISTING)
 
     return student

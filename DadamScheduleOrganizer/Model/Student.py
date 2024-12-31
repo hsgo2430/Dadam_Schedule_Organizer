@@ -6,11 +6,11 @@ class Student:
         self.name = name
         self.studentId = studentId
         self.major = major
-        self.timeTable = None
+        self.timeTables = list()
         self.worker = None
 
     def setTimetable(self, timeTable):
-        self.timeTable = timeTable
+        self.timeTables.append(timeTable)
 
     def setWorker(self, worker):
         self.worker = worker
@@ -20,8 +20,12 @@ class Student:
         print(self.studentId)
         print(self.major)
         # 결과 출력
-        for idx, row in enumerate(self.timeTable):
-            print(f"Row {idx}: {row}")
+        for timeTable in self.timeTables:
+            for idx, row in enumerate(timeTable):
+                print(f"Row {idx}: {row}")
+            print("==========================================")
+
+        print(len(self.timeTables))
 
 
 class Worker(Enum):
