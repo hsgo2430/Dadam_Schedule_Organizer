@@ -1,6 +1,9 @@
 from openpyxl import load_workbook
+from openpyxl.formatting.rule import CellIsRule
+from openpyxl.styles import PatternFill
+from openpyxl.utils import get_column_letter
 
-from Feature.ExcelUtil import findLastRowIndex, findLastColIndex
+from Feature.ExcelUtil import findLastRowIndex, findLastColIndex, setMajorColor
 from Model.Student import Worker
 
 def putStudentNameMajor(excel_file_path, student):
@@ -17,6 +20,7 @@ def putStudentNameMajor(excel_file_path, student):
             last_row = findLastRowIndex(work_space, 6, 67)
             work_space[f"{chr(last_row)}6"] = student.name
 
+    setMajorColor(load_wb, student.name, student.major)
     load_wb.save(excel_file_path)
 
 
