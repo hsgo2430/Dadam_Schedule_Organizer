@@ -5,6 +5,7 @@ import os
 from PyQt5.uic.properties import QtWidgets
 
 from Feature.MakeTimeTable import make_time_table
+from Feature.sortStudent import sortStudentTimeSchecule
 
 
 class Ui_MainWindow(object):
@@ -14,7 +15,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(587, 270)
+        MainWindow.resize(587, 370)
 
         self.action = QAction(MainWindow)
         self.action.setObjectName(u"action")
@@ -41,7 +42,7 @@ class Ui_MainWindow(object):
         # --근무시간표 정렬-- 2024-12-31 추가(김주상)
         self.SortButton = QPushButton(self.centralwidget)
         self.SortButton.setObjectName(u"SortButton")
-        self.SortButton.setGeometry(QRect(150, 130, 291, 61))
+        self.SortButton.setGeometry(QRect(150, 230, 291, 61))
         self.SortButton.setText("데이터 정렬")
 
         self.SortButton.clicked.connect(self.sort_worker_schecule)
@@ -124,8 +125,6 @@ class Ui_MainWindow(object):
     def sort_worker_schecule(self):
         if self.excel_file_path is not None:
             try:
-                file_paths, _ = QFileDialog.getOpenFileNames(None, 'PDF 파일 선택', '../data', 'PDF Files (*.pdf)')
-
                 sortStudentTimeSchecule(self.excel_file_path)
 
                 QMessageBox.critical(None, '종료', '근무자 시간표가 정렬되었습니다.')
